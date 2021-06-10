@@ -67,7 +67,7 @@ file:/bin/rm.lua:bin/rm.lua
 file:/bin/rmdir.lua:bin/rmdir.lua
 file:/bin/set.lua:bin/set.lua
 file:/bin/sh.lua:bin/sh.lua
-file:/bin/shutdown.lua:bin/shutdown
+file:/bin/shutdown.lua:bin/shutdown.lua
 file:/bin/sleep.lua:bin/sleep.lua
 file:/bin/source.lua:bin/source.lua
 file:/bin/su.lua:bin/su.lua
