@@ -1,0 +1,16 @@
+dir:/bin
+dir:/boot
+dir:/etc
+dir:/home
+dir:/lib
+dir:/sbin
+dir:/usr
+dir:/var
+dir:/etc/rc.d
+dir:/etc/sys
+dir:/lib/core
+dir:/lib/tools
+dir:/usr/bin
+dir:/usr/man
+dir:/usr/misc
+file:/init.lua:init.lua
