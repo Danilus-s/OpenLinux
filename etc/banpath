@@ -1,0 +1,11 @@
+/mnt
+/etc/sys
+/etc/banword
+/etc/banpath
+/etc/perm
+/init.lua
+/var/syslog.log
+/var/sudolog.log
+/lib/core
+/dev
+/root

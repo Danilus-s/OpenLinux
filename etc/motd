@@ -1,0 +1,42 @@
+local component = require("component")
+local computer = require("computer")
+local unicode = require("unicode")
+local tty = require("tty")
+local sh = require("sh")
+
+
+local lines = {"\27[33m" .. _OSVERSION .. "\27[m"}
+local greeting = ""
+
+
+local width = math.min(#greeting, (tty.getViewport() or math.huge) - 5)
+local maxLine = #lines[1]
+
+
+
+lines[#lines + 1] = sh.expand("$USER@$PCNAME\27[m")
+lines[#lines + 1] = math.floor(computer.totalMemory() / 1024) .. "k RAM"
+if component.isAvailable("modem") then
+  lines[#lines + 1] = "Modem is available"
+  lines[#lines + 1] = "> Modem is wireless: " .. tostring(component.modem.isWireless())
+  lines[#lines + 1] = "> Modem address:"
+  lines[#lines + 1] = "> " .. component.modem.address
+else
+  lines[#lines + 1] = "Modem is not available"
+end
+maxLine = 50
+
+
+
+local borders = {{unicode.char(0x2552), unicode.char(0x2550), unicode.char(0x2555)},
+                 {unicode.char(0x2502), nil, unicode.char(0x2502)},
+                 {unicode.char(0x2514), unicode.char(0x2500), unicode.char(0x2518)}}
+io.write(borders[1][1], string.rep(borders[1][2], maxLine + 2), borders[1][3], "\n")
+for i,line in ipairs(lines) do
+  if i == 1 then io.write(borders[2][1], " ", line, (" "):rep(maxLine - #line + 9), borders[2][3], " \n")
+  elseif i == 2 then io.write(borders[2][1], " ", line, (" "):rep(maxLine - #line + 4), borders[2][3], " \n")
+  else
+    io.write(borders[2][1], " ", line, (" "):rep(maxLine - #line + 1), borders[2][3], " \n")
+  end
+end
+io.write(borders[3][1] .. string.rep(borders[3][2], maxLine + 2) .. borders[3][3] .. "\n")
