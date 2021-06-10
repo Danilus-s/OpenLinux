@@ -24,7 +24,7 @@ local function install(fi, gt, y)
         local data = perm.split(fi[i], ":")
         data[2] = require("text").trim(data[2])
         data[3] = require("text").trim(data[3])
-        local url = "https://raw.githubusercontent.com/Danilus-s/OC-APT/master/" .. data[3]
+        local url = "https://raw.githubusercontent.com/" .. data[3]
         if y == false then
             if data[1] == "dep" and fs.exists(data[2]) then
                 io.write("Dependence `" .. data[2] .. "' already exists. Do you want to overwrite? [Y/n]")
