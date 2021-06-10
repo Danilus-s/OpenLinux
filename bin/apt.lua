@@ -27,18 +27,10 @@ local function install(fi, gt, y)
         local url = "https://raw.githubusercontent.com/" .. data[3]
         if y == false then
             if data[1] == "dep" and fs.exists(data[2]) then
-                io.write("Dependence `" .. data[2] .. "' already exists. Do you want to overwrite? [Y/n]")
-                local q = string.lower(string.sub(require("text").trim(term.read()),1,1))
-                if not q == "y" or q == "" then
-                    goto skip
-                end
+                goto skip
             end
             if data[1] == "file" and fs.exists(data[2]) then
-                io.write("File `" .. data[2] .."' already exists. Do you want to overwrite? [Y/n]")
-                local q = string.lower(string.sub(require("text").trim(term.read()),1,1))
-                if not q == "y" or q == "" then
-                    goto skip
-                end
+                goto skip
             end
         end
         
@@ -84,7 +76,7 @@ local function install(fi, gt, y)
 end
 
 if args[1] == "update" then
-    local url =             "https://raw.githubusercontent.com/Danilus-s/OC-APT/master/APTlist"
+    local url = "https://raw.githubusercontent.com/Danilus-s/OC-APT/master/APTlist"
     local f, reason = io.open("/etc/apt/update", "w")
     if not f then
         io.stderr:write("Failed opening file for writing: " .. reason)
