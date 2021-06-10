@@ -24,7 +24,7 @@ local function install(fi, gt, y)
     for i = 1, #fi do
         local data = perm.split(fi[i], ":")
         data[3] = require("text").trim(data[3])
-        local url = "https://raw.githubusercontent.com/" .. data[2]
+        local url = "https://raw.githubusercontent.com/Danilus-s/OC-APT/master/" .. data[2]
         if y == false then
             if data[1] == "dep" and fs.exists(data[3]) then
                 io.write("Dependence `" .. data[3] .. "' already exists. Do you want to overwrite? [Y/n]")
@@ -83,8 +83,8 @@ local function install(fi, gt, y)
     ::skip::
 end
 
-if args[1] == "update" then--https://raw.githubusercontent.com/IgorTimofeev/MineOS/master/Installer/Main.lua
-    local url =             "https://raw.githubusercontent.com/Danilus-s/OC-APT/master/APT%20list"
+if args[1] == "update" then
+    local url =             "https://raw.githubusercontent.com/Danilus-s/OC-APT/master/APTlist"
     local f, reason = io.open("/etc/apt/update", "w")
     if not f then
         io.stderr:write("Failed opening file for writing: " .. reason)
@@ -122,7 +122,7 @@ elseif args[1] == "install" and args[2] ~= nil then
         end
     end
     if get == nil then print("Package `" .. args[2] .. "' not found");return end
-    local url = "https://raw.githubusercontent.com/" .. get[2]
+    local url = "https://raw.githubusercontent.com/Danilus-s/OC-APT/master/" .. get[2]
     local files = {}
     io.write("Get information from: " .. url .. "\n")
     os.sleep(0)
@@ -143,7 +143,7 @@ elseif args[1] == "upgrade" then
             end
         end
         if get == nil then print("Package `" .. args[2] .. "' not found");return end
-        local url = "https://raw.githubusercontent.com/" .. get[2]
+        local url = "https://raw.githubusercontent.com/Danilus-s/OC-APT/master/" .. get[2]
         local files = {}
         io.write("Get information from: " .. url .. "\n")
         os.sleep(0)
@@ -158,7 +158,7 @@ elseif args[1] == "upgrade" then
         local get
         for l in io.lines("/etc/apt/installed") do
             get = perm.split(l, ":")
-            local url = "https://raw.githubusercontent.com/" .. get[2]
+            local url = "https://raw.githubusercontent.com/Danilus-s/OC-APT/master/" .. get[2]
             local files = {}
             io.write("Get information from: " .. url .. "\n")
             os.sleep(0)
@@ -180,7 +180,7 @@ elseif args[1] == "remove" and args[2] ~= nil then
         end
     end
     if get == nil then print("Package `" .. args[2] .. "' not found");return end
-    local url = "https://raw.githubusercontent.com/" .. get[2]
+    local url = "https://raw.githubusercontent.com/Danilus-s/OC-APT/master/" .. get[2]
     local files = {}
     io.write("Get information from: " .. url .. "\n")
     os.sleep(0)
