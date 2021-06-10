@@ -19,7 +19,6 @@ if #args < 1 then
     print("  remove <pkg>:    Uninstall the software package named `pkg'")
     return
 end
-if not fs.exists("/etc/apt") and fs.isDirectory("/etc/apt") then fs.makeDirectory("/etc/apt")
 local function install(fi, gt, y)
     for i = 1, #fi do
         local data = perm.split(fi[i], ":")
