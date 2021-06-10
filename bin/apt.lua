@@ -122,7 +122,7 @@ elseif args[1] == "install" and args[2] ~= nil then
         end
     end
     if get == nil then print("Package `" .. args[2] .. "' not found");return end
-    local url = "https://raw.githubusercontent.com/Danilus-s/OC-APT/master/" .. get[2]
+    local url = "https://raw.githubusercontent.com/" .. get[2]
     local files = {}
     io.write("Get information from: " .. url .. "\n")
     os.sleep(0)
