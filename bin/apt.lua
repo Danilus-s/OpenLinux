@@ -22,18 +22,19 @@ end
 local function install(fi, gt, y)
     for i = 1, #fi do
         local data = perm.split(fi[i], ":")
+        data[2] = require("text").trim(data[2])
         data[3] = require("text").trim(data[3])
-        local url = "https://raw.githubusercontent.com/Danilus-s/OC-APT/master/" .. data[2]
+        local url = "https://raw.githubusercontent.com/Danilus-s/OC-APT/master/" .. data[3]
         if y == false then
-            if data[1] == "dep" and fs.exists(data[3]) then
-                io.write("Dependence `" .. data[3] .. "' already exists. Do you want to overwrite? [Y/n]")
+            if data[1] == "dep" and fs.exists(data[2]) then
+                io.write("Dependence `" .. data[2] .. "' already exists. Do you want to overwrite? [Y/n]")
                 local q = string.lower(string.sub(require("text").trim(term.read()),1,1))
                 if not q == "y" or q == "" then
                     goto skip
                 end
             end
-            if data[1] == "file" and fs.exists(data[3]) then
-                io.write("File `" .. data[3] .."' already exists. Do you want to overwrite? [Y/n]")
+            if data[1] == "file" and fs.exists(data[2]) then
+                io.write("File `" .. data[2] .."' already exists. Do you want to overwrite? [Y/n]")
                 local q = string.lower(string.sub(require("text").trim(term.read()),1,1))
                 if not q == "y" or q == "" then
                     goto skip
@@ -41,12 +42,12 @@ local function install(fi, gt, y)
             end
         end
         
-        local f, reason = io.open(data[3], "w")
+        local f, reason = io.open(data[2], "w")
         if not f then
             print("Failed opening file for writing: " .. reason)
             return
         end
-        io.write("Get information from: " .. url .. "\n")
+        io.write("Get data from: " .. url .. "... ")
         os.sleep(0)
         local result, response = pcall(it.request, url)
         if result then
@@ -54,11 +55,11 @@ local function install(fi, gt, y)
                 f:write(chunk)
             end
             f:close()
-            io.write("File `" .. data[3] .."' installed\n")
+            io.write("File `" .. data[2] .."' installed\n")
         else
-            io.write("File `" .. data[3] .."' not installed\n")
+            io.write("File `" .. data[2] .."' not installed\n")
             f:close()
-            fs.remove(data[3])
+            fs.remove(data[2])
         end
         ::skip::
     end
