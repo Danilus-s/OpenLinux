@@ -288,11 +288,11 @@ function filesystem.list(path)
       return value
     end
   else
-  set = {"Block"} 
-  return function()
-    local key, value = next(set)
-    set[key or false] = nil
-    return value
+    set = {"Block"} 
+    return function()
+      local key, value = next(set)
+      set[key or false] = nil
+      return value
     end, "Block"
   end
 end

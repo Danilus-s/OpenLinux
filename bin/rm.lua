@@ -1,8 +1,6 @@
 local fs = require("filesystem")
 local shell = require("shell")
 
-if not require("perm").getUsr("rm") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local function usage()
   print("Usage: rm [options] <filename1> [<filename2> [...]]"..[[
 

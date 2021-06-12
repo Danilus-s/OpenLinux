@@ -1,8 +1,6 @@
 local computer = require('computer')
 local sh = require('sh')
 
-if not require("perm").getUsr("time") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local real_before, cpu_before = computer.uptime(), os.clock()
 local cmd_result = 0
 if ... then

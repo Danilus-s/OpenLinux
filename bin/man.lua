@@ -1,8 +1,6 @@
 local fs = require("filesystem")
 local shell = require("shell")
 
-if not require("perm").getUsr("man") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args = shell.parse(...)
 if #args == 0 then
   io.write("Usage: man <topic>\n")

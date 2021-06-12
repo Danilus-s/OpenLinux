@@ -2,8 +2,6 @@ local shell = require("shell")
 local args, ops = shell.parse(...)
 local hostname = args[1]
 
-if not require("perm").getUsr("hostname") then io.write("\27[31mPermission denied\27[m\n");return end
-
 if hostname then
   local file, reason = io.open("/etc/hostname", "w")
   if not file then

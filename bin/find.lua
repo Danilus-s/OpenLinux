@@ -2,8 +2,6 @@ local shell = require("shell")
 local fs = require("filesystem")
 local text = require("text")
 
-if not require("perm").getUsr("find") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local USAGE = 
 [===[Usage: find [path] [--type=[dfs]] [--[i]name=EXPR]
   --path  if not specified, path is assumed to be current working directory

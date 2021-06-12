@@ -1,8 +1,6 @@
 local computer = require("computer")
 local total = computer.totalMemory()
 
-if not require("perm").getUsr("free") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local max = 0
 for _=1,40 do
   max = math.max(max, computer.freeMemory())

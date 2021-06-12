@@ -4,8 +4,6 @@ local fs = require("filesystem")
 local tx = require("transforms")
 local text = require("text")
 
-if not require("perm").getUsr("tree") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args, opts = shell.parse(...)
 
 local function die(...)

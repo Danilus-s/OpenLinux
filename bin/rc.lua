@@ -1,8 +1,6 @@
 local rc = require("rc")
 local fs = require("filesystem")
 
-if not require("perm").getUsr("rc") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local function loadConfig()
   local env = {}
   local result, reason = loadfile('/etc/rc.cfg', 't', env)

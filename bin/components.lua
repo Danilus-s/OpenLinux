@@ -2,8 +2,6 @@ local component = require("component")
 local shell = require("shell")
 local text = require("text")
 
-if not require("perm").getUsr("components") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args, options = shell.parse(...)
 local count = tonumber(options.limit) or math.huge
 

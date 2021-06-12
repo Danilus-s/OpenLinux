@@ -2,8 +2,6 @@
 local shell = require("shell")
 local fs =  require("filesystem")
 
-if not require("perm").getUsr("touch") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args, options = shell.parse(...)
 
 local function usage()

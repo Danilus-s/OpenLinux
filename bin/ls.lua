@@ -1,7 +1,5 @@
 -- load complex, if we can (might be low on memory)
 
-if not require("perm").getUsr("ls") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local ok, why = pcall(function(...)
   return loadfile("/lib/core/full_ls.lua", "bt", _G)(...)
 end, ...)

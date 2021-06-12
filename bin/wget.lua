@@ -4,8 +4,6 @@ local internet = require("internet")
 local shell = require("shell")
 local text = require("text")
 
-if not require("perm").getUsr("wget") then io.write("\27[31mPermission denied\27[m\n");return end
-
 if not component.isAvailable("internet") then
   io.stderr:write("This program requires an internet card to run.")
   return

@@ -6,36 +6,46 @@ local perm = require("perm")
 local sha = require("sha2")
 
 local args,opts = shell.parse(...)
-local arr = {...}
-local cl = {}
 local com = ""
-local accUsr = "root"
+local pass
+local try = 1
 
-if opts.h then
-  print("Use: \n\t`sudo <command>'\n\t`sudo -u <userName> <command>'")
+local stw = 1
+if opts.p then 
+  stw = 2
+end
+for i = stw, #args do
+  com = com .. args[i] .. " "
+end
+
+if opts.h or opts.help then
+  print("Usage:`sudo [-p] [<password>] <command>")
   return
 end
+if opts.p then
+  pass = args[1]
+  goto skip
+end
 
-if opts.u then
-  accUsr = args[1]
-  local d = #arr-1
-  for i = 1, d do
-    cl[i] = arr[i+2]
+if os.getenv("SUDO") == "true" then
+  if os.time() >= tonumber(os.getenv("SUDOT")) then
+    os.setenv("SUDO", nil)
+    os.setenv("SUDOT", nil)
+  else
+    local env = os.getenv("USER")
+    os.setenv("USER", "root")
+    sh.execute(_ENV, com)
+    os.setenv("USER", env)
+    return
   end
-else 
-  accUsr = "root"
-  cl = arr
 end
-
-for i = 1, #cl do
-  com = com .." "..cl[i]
-end
-
-io.write("Enter password: ")
+::ret::
+io.write("[sudo] password for root: ")
 term.setCursorBlink(false)
-local pass = term.read(nil,nil,nil," ")
+pass = term.read(nil,nil,nil," ")
 term.setCursorBlink(true)
 io.write("\n")
+::skip::
 local file = io.open("/etc/sys/passwd")
 
 local tmp = {}
@@ -44,21 +54,29 @@ local f
 repeat
  f = file:read("*l")
  if f ~= nil then tmp = perm.split(f, ":") else break end
-until tmp[1] == accUsr
+until tmp[1] == "root"
 file:close()
-if tmp[1] ~= accUsr then
+if tmp[1] ~= "root" then
   print("User not found")
   return
 end
 
 if tostring(tmp[2]) == sha.sha3_256(text.trim(pass)) then
+  os.setenv("SUDO", "true")
+  os.setenv("SUDOT", os.time()+60)
   local env = os.getenv("USER")
   os.setenv("USER", "root")
   sh.execute(_ENV, com)
-  os.setenv("USER", "user")
+  os.setenv("USER", env)
 else
-  print("\nAccess denied")
-  local file = io.open("/var/sudolog.log", "a")
+  if try < 3 and not opts.p then 
+    print("Password is wrong, please try again")
+    try = try + 1
+    goto ret
+  else
+    print("sudo: 3 incorrect password attempts")
+  end
+  local file = io.open("/var/sudo.log", "a")
   if ... ~= nil then file:write(os.date() .. " (" .. os.getenv("USER") .. ")> ".. ... .."\n") end
   file:close()
 end

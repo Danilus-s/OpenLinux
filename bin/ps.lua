@@ -5,7 +5,6 @@ local thread = require("thread")
 local event_mt = getmetatable(event.handlers)
 
 -- WARNING this code does not use official kernel API and is likely to change
-if not require("perm").getUsr("ps") then io.write("\27[31mPermission denied\27[m\n");return end
 
 local data = {}
 local widths = {}

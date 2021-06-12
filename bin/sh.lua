@@ -23,7 +23,7 @@ function isBan(com)
   for t in io.lines("/etc/banpath") do
     for n = 1, #dirs do
       if string.find(dirs[n], t) then
-        return true
+        return true, t
       end
     end
   end
@@ -36,12 +36,13 @@ function isBanW(com)
   while true do
     f = file:read("*l")
     if f ~= nil then 
-      if string.find(com, f) ~= nil then return true end 
+      if string.find(com, f) ~= nil then return true, f end 
     else 
       break 
     end
   end
   file:close()
+  return false
 end
 
 local logout = false
@@ -69,11 +70,18 @@ if #args == 0 then
     tty.window.cursor = nil
     if command then
       command = text.trim(command)
-      if os.getenv("USER") ~= "root" and isBan(command) then 
-        print("File or directory is blocked\nTry `sudo su'")
-      elseif os.getenv("USER") ~= "root" and isBanW(command) then 
-          print("Word is blocked\nTry `sudo su'")
-      elseif command == "exit" then
+      if os.getenv("USER") ~= "root" then 
+        local ib = {isBan(command)}
+        local ibw = {isBanW(command)}
+        if ib[1] then
+          print("\27[31mPath: " .. ib[2] .. ": Permission denied.\27[m")
+          goto skip
+        elseif ibw[1] then
+          print("\27[31mWord: " .. ibw[2] .. ": Permission denied.\27[m")
+          goto skip
+        end
+      end
+      if command == "exit" then
         os.setenv("USER", "user")
         os.setenv("SU", "false")
         return
@@ -100,6 +108,7 @@ if #args == 0 then
     elseif command == nil then -- false only means the input was interrupted
       return -- eof
     end
+    ::skip::
   end
 else
   -- execute command.

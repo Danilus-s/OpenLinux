@@ -1,8 +1,6 @@
 --[[Lua implementation of the UN*X yes command--]]
 local shell = require("shell")
 
-if not require("yes").getUsr("cat") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args, options = shell.parse(...)
 
 if options.V or options.version then

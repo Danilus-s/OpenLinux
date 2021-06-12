@@ -181,10 +181,8 @@ function sh.internal.executePipes(pipe_parts, eargs, env)
         return false, redirects -- in this failure case, redirects has the error message
       end
     end
-
     commands[#commands + 1] = table.pack(table.remove(args, 1), args, redirects)
   end
-
   local threads, reason = sh.internal.createThreads(commands, env, {[#commands]=eargs})  
   if not threads then return false, reason end
   return process.internal.continue(threads[1])
@@ -205,6 +203,7 @@ function sh.execute(env, command, ...)
   local eargs = table.pack(...)
 
   -- simple
+  --print(table.unpack(table.unpack(words)), table.unpack(eargs))
   if not command:find("[;%$&|!<>]") then
     sh.internal.ec.last = sh.internal.command_result_as_code(sh.internal.executePipes({words}, eargs, env))
     return true

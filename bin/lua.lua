@@ -1,8 +1,6 @@
 local shell = require("shell")
 local args = shell.parse(...)
 
-if not require("perm").getUsr("lua") then io.write("\27[31mPermission denied\27[m\n");return end
-
 if #args == 0 then
   args = {"/lib/core/lua_shell.lua"}
 end

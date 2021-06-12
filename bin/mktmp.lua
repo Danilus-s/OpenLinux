@@ -2,8 +2,6 @@ local fs = require("filesystem")
 local shell = require("shell")
 local sh = require("sh")
 
-if not require("perm").getUsr("mktmp") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local touch = loadfile(shell.resolve("touch", "lua"))
 local mkdir = loadfile(shell.resolve("mkdir", "lua"))
 

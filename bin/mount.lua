@@ -1,8 +1,6 @@
 local fs = require("filesystem")
 local shell = require("shell")
 
-if not require("perm").getUsr("mount") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local function usage()
   io.stderr:write([==[
 Usage: mount [OPTIONS] [device] [path]")

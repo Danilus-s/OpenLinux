@@ -4,8 +4,6 @@ local fs = require("filesystem")
 local term = require("term")
 local perm = require("perm")
 
-if not require("perm").getUsr("apt") then io.write("\27[31mPermission denied\27[m\n");return end
-
 if not fs.exists("/etc/apt") and not fs.isDirectory("/etc/apt") then fs.makeDirectory("/etc/apt") end
 
 local args, opt = sh.parse(...)

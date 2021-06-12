@@ -3,8 +3,6 @@ local args, options = shell.parse(...)
 
 local ec, error_prefix = 0, "alias:"
 
-if not require("perm").getUsr("alias") then io.write("\27[31mPermission denied\27[m\n");return end
-
 if options.help then
   print(string.format("Usage: alias: [name[=value] ... ]"))
   return

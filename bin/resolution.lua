@@ -1,8 +1,6 @@
 local shell = require("shell")
 local tty = require("tty")
 
-if not require("perm").getUsr("resolution") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args = shell.parse(...)
 local gpu = tty.gpu()
 

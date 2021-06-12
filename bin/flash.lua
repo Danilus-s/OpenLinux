@@ -2,8 +2,6 @@ local component = require("component")
 local shell = require("shell")
 local fs = require("filesystem")
 
-if not require("perm").getUsr("flash") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args, options = shell.parse(...)
 
 if #args < 1 and not options.l then

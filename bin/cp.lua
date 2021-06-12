@@ -1,8 +1,6 @@
 local shell = require("shell")
 local transfer = require("tools/transfer")
 
-if not require("perm").getUsr("cp") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args, options = shell.parse(...)
 options.h = options.h or options.help
 if #args < 2 or options.h then

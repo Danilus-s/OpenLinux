@@ -1,7 +1,5 @@
 local args, options = require("shell").parse(...)
 
-if not require("perm").getUsr("echo") then io.write("\27[31mPermission denied\27[m\n");return end
-
 if options.help then
   io.write([[
 `echo` writes the provided string(s) to the standard output.

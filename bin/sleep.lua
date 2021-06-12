@@ -2,8 +2,6 @@ local shell = require("shell")
 local tty = require("tty")
 local args, options = shell.parse(...)
 
-if not require("perm").getUsr("sleep") then io.write("\27[31mPermission denied\27[m\n");return end
-
 if options.help then
   print([[Usage: sleep NUMBER[SUFFIX]...
 Pause for NUMBER seconds.  SUFFIX may be 's' for seconds (the default),

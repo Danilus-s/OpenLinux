@@ -1,7 +1,5 @@
 local computer = require("computer")
 
-if not require("perm").getUsr("uptime") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local seconds = math.floor(computer.uptime())
 local minutes, hours = 0, 0
 if seconds >= 60 then

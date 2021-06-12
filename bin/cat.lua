@@ -1,8 +1,6 @@
 local shell = require("shell")
 local fs = require("filesystem")
 
-if not require("perm").getUsr("cat") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args = shell.parse(...)
 if #args == 0 then
   args = {"-"}

@@ -2,8 +2,6 @@ local computer = require("computer")
 local shell = require("shell")
 local text = require("text")
 
-if not require("perm").getUsr("lshw") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args, options = shell.parse(...)
 
 local devices = computer.getDeviceInfo()

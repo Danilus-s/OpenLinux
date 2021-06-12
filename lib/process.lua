@@ -35,6 +35,7 @@ function process.load(path, env, init, name)
     code = function(...)
       local fs, shell = require("filesystem"), require("shell")
       local program, reason = shell.resolve(path, "lua")
+      require("perm").getUsr(program)
       if not program then
         return require("tools/programLocations").reportNotFound(path, reason)
       end

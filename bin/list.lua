@@ -1,8 +1,6 @@
 local fs = require("filesystem")
 local shell = require("shell")
 
-if not require("perm").getUsr("list") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args, ops = shell.parse(...)
 if #args == 0 then
   table.insert(args, ".")

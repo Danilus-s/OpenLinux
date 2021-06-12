@@ -1,7 +1,5 @@
 local shell = require("shell")
 
-if not require("perm").getUsr("unalias") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args = shell.parse(...)
 if #args < 1 then
   io.write("Usage: unalias <name>...\n")

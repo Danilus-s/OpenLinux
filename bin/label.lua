@@ -2,8 +2,6 @@ local shell = require("shell")
 local devfs = require("devfs")
 local comp = require("component")
 
-if not require("perm").getUsr("label") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args, options = shell.parse(...)
 if #args < 1 then
   io.write("Usage: label [-a] <device> [<label>]\n")

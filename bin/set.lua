@@ -1,7 +1,5 @@
 local args = {...}
 
-if not require("perm").getUsr("set") then io.write("\27[31mPermission denied\27[m\n");return end
-
 if #args < 1 then
   for k,v in pairs(os.getenv()) do
     io.write(k .. "='" .. string.gsub(v, "'", [['"'"']]) .. "'\n")

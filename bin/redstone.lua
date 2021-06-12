@@ -3,8 +3,6 @@ local component = require("component")
 local shell = require("shell")
 local sides = require("sides")
 
-if not require("perm").getUsr("redstone") then io.write("\27[31mPermission denied\27[m\n");return end
-
 if not component.isAvailable("redstone") then
   io.stderr:write("This program requires a redstone card or redstone I/O block.\n")
   return 1

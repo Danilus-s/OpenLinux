@@ -3,8 +3,6 @@ local shell = require("shell")
 
 local options
 
-if not require("perm").getUsr("install") then io.write("\27[31mPermission denied\27[m\n");return end
-
 do
   local basic, reason = loadfile("/lib/core/install_basics.lua", "bt", _G)
   if not basic then

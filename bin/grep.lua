@@ -13,8 +13,6 @@ local computer = require("computer")
 
 -- Process the command line arguments
 
-if not require("perm").getUsr("grep") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args, options = shell.parse(...)
 
 local gpu = tty.gpu()

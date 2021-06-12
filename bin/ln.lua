@@ -2,8 +2,6 @@ local component = require("component")
 local fs = require("filesystem")
 local shell = require("shell")
 
-if not require("perm").getUsr("ln") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args = shell.parse(...)
 if #args == 0 then
   io.write("Usage: ln <target> [<name>]\n")

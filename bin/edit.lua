@@ -5,8 +5,6 @@ local term = require("term") -- TODO use tty and cursor position instead of glob
 local text = require("text")
 local unicode = require("unicode")
 
-if not require("perm").getUsr("edit") then io.write("\27[31mPermission denied\27[m\n");return end
-
 if not term.isAvailable() then
   return
 end

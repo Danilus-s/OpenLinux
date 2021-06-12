@@ -4,8 +4,6 @@ local term = require("term")
 local sha = require("sha2")
 local text = require("text")
 
-if not require("perm").getUsr("passwd") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args,opts = shell.parse(...)
 local needUsr
 local needL

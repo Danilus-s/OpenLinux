@@ -1,8 +1,6 @@
 local event = require("event")
 local tty = require("tty")
 
-if not require("perm").getUsr("dmesg") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args = {...}
 local gpu = tty.gpu()
 local interactive = io.output().tty

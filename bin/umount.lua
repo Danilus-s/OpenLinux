@@ -3,8 +3,6 @@ local shell = require("shell")
 
 local args, options = shell.parse(...)
 
-if not require("perm").getUsr("umount") then io.write("\27[31mPermission denied\27[m\n");return end
-
 if #args < 1 then
   io.write("Usage: umount [-a] <mount>\n")
   io.write(" -a  Remove any mounts by file system label or address instead of by path. Note that the address may be abbreviated.\n")

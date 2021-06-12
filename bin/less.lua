@@ -3,8 +3,6 @@ local shell = require("shell")
 local unicode = require("unicode")
 local term = require("term") -- using term for negative scroll feature
 
-if not require("perm").getUsr("less") then io.write("\27[31mPermission denied\27[m\n");return end
-
 local args, ops = shell.parse(...)
 if #args > 1 then
   io.write("Usage: ", os.getenv("_"):match("/([^/]+)%.lua$"), " <filename>\n")

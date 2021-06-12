@@ -20,7 +20,17 @@ function perm.getUsr(comName)
   elseif tmp[2] == "user" then
     ret = true
   end
-  return ret
+  if not ret then perm.error(comName) end
+end
+
+function perm.error(...)
+  local arg = {...}
+  local str = ""
+  for i = 1, #arg do
+    str = str .. arg[i] .. ": "
+  end
+  print("\27[31m" .. str .. "Permission denied.\27[m")
+  os.exit()
 end
 
 function perm.getPerm(user)
