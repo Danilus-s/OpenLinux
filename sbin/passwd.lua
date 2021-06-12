@@ -41,14 +41,10 @@ if os.getenv("USER") == "user" then
     if curData[2] ~= sha.sha3_256(curPass) then print("Current password mismatch");return end
 end
 io.write("New password: ")
-term.setCursorBlink(false)
-local newPass = text.trim(term.read(nil,nil,nil," "))
-term.setCursorBlink(true)
+local newPass = perm.read()
 io.write("\n")
 io.write("Type again: ")
-term.setCursorBlink(false)
-local agaPass = text.trim(term.read(nil,nil,nil," "))
-term.setCursorBlink(true)
+local agaPass = perm.read()
 io.write("\n")
 
 if agaPass ~= newPass then

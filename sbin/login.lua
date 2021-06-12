@@ -26,7 +26,7 @@ gpu.set(w/2-#txt/2,h/2-4, txt)
 gpu.set(w/2-#txt2/2,h/2-6, txt2)
 term.setCursor(w/2-13,h/2-2)
 gpu.setBackground(0x000000)
-rawpass = text.trim(term.read(nil,nil,nil, " "))
+rawpass = perm.read()
 local pass = sha.sha3_256(rawpass)
 if pass ~= d[2] then goto retpass end
 

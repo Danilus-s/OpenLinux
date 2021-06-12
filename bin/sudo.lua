@@ -41,9 +41,7 @@ if os.getenv("SUDO") == "true" then
 end
 ::ret::
 io.write("[sudo] password for root: ")
-term.setCursorBlink(false)
-pass = term.read(nil,nil,nil," ")
-term.setCursorBlink(true)
+pass = perm.read()
 io.write("\n")
 ::skip::
 local file = io.open("/etc/sys/passwd")

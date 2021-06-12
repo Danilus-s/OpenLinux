@@ -1,4 +1,6 @@
 local sha = require ("sha2")
+local g = require("component").gpu
+local term = require("term")
 local perm = {}
 
 function perm.getUsr(comName)
@@ -21,6 +23,17 @@ function perm.getUsr(comName)
     ret = true
   end
   if not ret then perm.error(comName) end
+end
+
+function perm.read()
+  local x,y = term.getCursor()
+  local x1,y1 = g.getResolution()
+  local c = g.getForeground()
+  g.setForeground(0x000000)
+  g.fill(x,y,x1-x,1, " ")
+  local d = require("text").trim(term.read(nil,nil,nil," "))
+  g.setForeground(c)
+  return d
 end
 
 function perm.error(...)
