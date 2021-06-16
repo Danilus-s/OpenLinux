@@ -19,7 +19,7 @@ m.open(port)
 for i = 1, 5 do
     local tAdr = nw.getAdr(adr)
     if tAdr ~= nil then
-        print("From " .. args[1] .. ": address=" .. tAdr .. " time=" .. os.time() - up .. " sec")
+        print("From " .. args[1] .. ": address=" .. tAdr .. " time=" .. os.time() - up .. " ms")
     else
         print("Timed out")
     end

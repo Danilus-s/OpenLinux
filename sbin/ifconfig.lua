@@ -22,7 +22,7 @@ if ... == nil then
         end
         print("\tinet " .. info [i][3])
         print("\taddress " .. info[i][2])
-        print("\tpacket size " .. c.invoke(info[i][2], "maxPacketSize"))
+        if not c.invoke(info[i][2], "isWireless") then print("\tpacket size " .. c.invoke(info[i][2], "maxPacketSize")) end
         if c.invoke(info[i][2], "isWireless") then print("\tsignal strength " .. c.invoke(info[i][2], "getStrength")) end
         if i ~= #info then print("") end
     end

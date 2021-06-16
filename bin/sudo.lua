@@ -61,7 +61,7 @@ end
 
 if tostring(tmp[2]) == sha.sha3_256(text.trim(pass)) then
   os.setenv("SUDO", "true")
-  os.setenv("SUDOT", os.time()+60)
+  os.setenv("SUDOT", os.time()+6000)
   local env = os.getenv("USER")
   os.setenv("USER", "root")
   sh.execute(_ENV, com)
