@@ -20,7 +20,6 @@ file:/bin/alias.lua:bin/alias.lua
 file:/bin/apt.lua:bin/apt.lua
 file:/bin/cat.lua:bin/cat.lua
 file:/bin/cd.lua:bin/cd.lua
-file:/bin/cfgemu.lua:bin/cfgemu.lua
 file:/bin/clear.lua:bin/clear.lua
 file:/bin/components.lua:bin/components.lua
 file:/bin/cp.lua:bin/cp.lua
