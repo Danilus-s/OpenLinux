@@ -73,6 +73,13 @@ function perm.getUser(user)
   if f ~= nil then return data else return nil end
 end
 
+function perm.concatTable(t1, t2)
+  for i=1,#t2 do
+    t1[#t1+1] = t2[i]
+  end
+  return t1
+end
+
 function perm.split (inputstr, sep)
   if inputstr == nil then return "" end
   if sep == nil then

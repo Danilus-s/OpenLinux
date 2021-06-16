@@ -169,6 +169,27 @@ if require("filesystem").exists("/etc/sys/passwd") then
     os.remove("/etc/sys/passwd")
   end
 end
+if not require("filesystem").exists("/etc/sys/network.cfg") then
+  local f = io.open("/etc/sys/network.cfg", "w")
+  local ifaces = {}
+  local txt = ""
+  for i in require("component").list("modem") do
+      ifaces[#ifaces+1] = i
+  end
+  local eth = 0
+  local wlan = 0
+  for i = 1, #ifaces do
+    if require("component").invoke(ifaces[i], "isWireless") then
+      txt = txt .. "wlan" .. wlan .. ":" .. ifaces[i] .. ":" .. require("network").newIP() .. "\n"
+      wlan = wlan + 1
+    else
+      txt = txt .. "eth" .. eth .. ":" .. ifaces[i] .. ":" .. require("network").newIP() .. "\n"
+      eth = eth + 1
+    end
+  end
+  f:write(txt)
+  f:close()
+end
 os.setenv("SU", "false")
 dofile("/sbin/reg.lua")
 dofile("/sbin/login.lua")

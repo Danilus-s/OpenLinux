@@ -19,3 +19,4 @@
 /bin/useradd.lua:root
 /bin/userdel.lua:root
 /bin/wget.lua:root
+/sbin/ifconfig.lua:root

@@ -14,7 +14,6 @@ dir:/lib/core/devfs
 dir:/lib/core/devfs/adapters
 dir:/usr/bin
 dir:/usr/man
-dir:/usr/misc
 file:/init.lua:init.lua
 file:/bin/address.lua:bin/address.lua
 file:/bin/alias.lua:bin/alias.lua
@@ -133,6 +132,7 @@ file:/lib/serialization.lua:lib/serialization.lua
 file:/lib/transforms.lua:lib/transforms.lua
 file:/lib/devfs.lua:lib/devfs.lua
 file:/lib/process.lua:lib/process.lua
+file:/lib/network.lua:lib/network.lua
 file:/lib/tools/transfer.lua:lib/tools/transfer.lua
 file:/lib/tools/programLocations.lua:lib/tools/programLocations.lua
 file:/lib/core/full_filesystem.lua:lib/core/full_filesystem.lua
@@ -211,5 +211,6 @@ file:/usr/man/grep:usr/man/grep
 file:/sbin/passwd.lua:sbin/passwd.lua
 file:/sbin/reg.lua:sbin/reg.lua
 file:/sbin/login.lua:sbin/login.lua
+file:/sbin/ifconfig.lua:sbin/ifconfig.lua
 file:/sbin/useradd.lua:sbin/useradd.lua
 file:/sbin/userdel.lua:sbin/userdel.lua

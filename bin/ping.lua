@@ -1,30 +1,27 @@
 local c = require("component")
 local sh = require("shell")
 local cp = require("computer")
-local e = require("event")
+local nw = require("network")
 local m = c.modem
 
 local args, opt = sh.parse(...)
 
-local port = 1
-local tm = 5
+local port = 7
 local adr
-local up = cp.uptime()
+local up = os.time()
 local cl = m.isOpen(port)
 
-if opt.h or opt.help then print("Use `ping <-b> [address] <-p> [port?] <-t> [timeout?]'");return end
-if opt.p then if opt.b then port = tonumber(args[1]) else port = tonumber(args[2]) end end
-if opt.t then if opt.b then tm = tonumber(args[2]) else tm = tonumber(args[3]) end end
-if not opt.b then adr = args[1] end
+if opt.h or opt.help or #args < 1 then print("Usage: ping [IP]");return end
+adr = args[1]
 
-local function rec(...)
-    local arg = {...}
-    
-end
+print("PING " .. args[1])
 m.open(port)
-if opt.b then m.broadcast(port, "ping") else m.send(adr, port, "ping") end
-::ret::
-local arg = {e.pull(tm, "modem_message")}
-if arg[2] == arg[3] then goto ret end
-print("From: " .. arg[3] .. " Name: " .. arg[6] .. " time: " .. cp.uptime() - up .. "sec")
+for i = 1, 5 do
+    local tAdr = nw.getAdr(adr)
+    if tAdr ~= nil then
+        print("From " .. args[1] .. ": address=" .. tAdr .. " time=" .. os.time() - up .. " sec")
+    else
+        print("Timed out")
+    end
+end
 if not cl then m.close(port) end
