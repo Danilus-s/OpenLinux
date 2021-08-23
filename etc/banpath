@@ -7,5 +7,4 @@
 /var/syslog.log
 /var/sudolog.log
 /lib/core
-/dev
 /root

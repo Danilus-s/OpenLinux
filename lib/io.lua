@@ -35,6 +35,14 @@ function io.lines(filename, ...)
 end
 
 function io.open(path, mode)
+  local nmode = mode or "r"
+  local ok = true
+  if nmode ~= "r" then
+	if require("perm").isBan(path) or not require("perm").isUsrDir(path) then
+	  ok = require("perm").isSys(require("process").info().command)
+	end
+  end
+  if not ok then require("perm").error("open file", path) end
   -- These requires are not on top because this is a bootstrapped file.
   local resolved_path = require("shell").resolve(path)
   local stream, result = require("filesystem").open(resolved_path, mode)

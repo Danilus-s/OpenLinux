@@ -1,38 +1,56 @@
 local sha = require ("sha2")
-local g = require("component").gpu
+local gpu = require("component").gpu
 local term = require("term")
-local perm = {}
+local adv = require("adv")
+local p = require("process")
 
-function perm.getUsr(comName)
+local perm = {}
+local system = {}
+system.logged = false
+system.defuser = ""
+system.user = ""
+system.home = ""
+system.sudo = false
+system.sudot = 0
+
+local sys = {
+  "init",
+  "sudo",
+  "su",
+  "sh",
+  "/bin/sh.lua",
+  "/etc/profile.lua",
+  "login",
+  "logout",
+  "passwd",
+  "/sbin/passwd.lua"
+}
+
+function perm.getNeedPerm(comName)
   local file = io.open("/etc/perm")
   local f
   local tmp = {}
   repeat
    f = file:read("*l")
-   if f ~= nil then tmp = perm.split(f, ":") else break end
+   if f ~= nil then tmp = adv.split(f, ":") else break end
   until tostring(tmp[1]) == comName
   file:close()
-  if f == nil then tmp[2] = "user" end
-  --if tmp[2] == "*" then tmp[2]="" end
+  if f == nil then tmp[2] = 10 end
   local ret = false
   
-  local nv = os.getenv("USER")
-  if tmp[2] == "root" then
-    if nv == "root" then ret = true end
-  elseif tmp[2] == "user" then
-    ret = true
-  end
+  local nv = perm.getPerm(perm.getVar("user"))
+  if nv <= tonumber(tmp[2]) then ret = true end
   if not ret then perm.error(comName) end
 end
 
 function perm.read()
   local x,y = term.getCursor()
-  local x1,y1 = g.getResolution()
-  local c = g.getForeground()
-  g.setForeground(0x000000)
-  g.fill(x,y,x1-x,1, " ")
+  local x1,y1 = gpu.getResolution()
+  local c = gpu.getForeground()
+  gpu.setForeground(0x000000)
+  gpu.fill(x,y,x1-x,1, " ")
   local d = require("text").trim(term.read(nil,nil,nil," "))
-  g.setForeground(c)
+  gpu.setForeground(c)
   return d
 end
 
@@ -52,12 +70,12 @@ function perm.getPerm(user)
   local tmp = {}
   repeat
     f = file:read("*l")
-    if f ~= nil then tmp = perm.split(f, ":") else break end
+    if f ~= nil then tmp = adv.split(f, ":") else break end
   until tostring(tmp[1]) == user
   file:close()
-  if f == nil then return "guest" end
+  if f == nil then return 10 end
   
-  return tmp[1]
+  return tonumber(tmp[2])
 end
 
 function perm.getUser(user)
@@ -66,30 +84,10 @@ function perm.getUser(user)
   local file = io.open("/etc/sys/passwd")
   repeat
       f = file:read("*l")
-      if f ~= nil then data = perm.split(f, ":") else break end
+      if f ~= nil then data = adv.split(f, ":") else break end
   until data[1] == user
   file:close()
-   if data[1] == "user" then data[3] = "/home" elseif data[1] == "root" then data[3] = "/root" end
   if f ~= nil then return data else return nil end
-end
-
-function perm.concatTable(t1, t2)
-  for i=1,#t2 do
-    t1[#t1+1] = t2[i]
-  end
-  return t1
-end
-
-function perm.split (inputstr, sep)
-  if inputstr == nil then return "" end
-  if sep == nil then
-    sep = "%s"
-  end
-  local t={}
-  for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-    table.insert(t, str)
-  end
-  return t
 end
 
 function perm.save(path)
@@ -121,7 +119,7 @@ function perm.check()
             needL = #prof
         end
     end
-    local sum = perm.split(prof[needL], ":")[2]
+    local sum = adv.split(prof[needL], ":")[2]
     if sum ~= sha.md5(txt) then
       print("File `" .. c .. "' modified!")
       require("computer").beep(700, 0.3)
@@ -133,6 +131,57 @@ function perm.check()
     io.write("\nEnd")
     io.read()
   end
+end
+
+function perm.isBan(path)
+  if perm.getPerm(perm.getVar("user")) == 1 then return false end
+  for i = 1, #sys do
+    if p.info().command == sys[i] then return false end
+	end
+  for t in io.lines("/etc/banpath") do
+    if string.find(path, t) then
+      return true
+    end
+  end
+  return false
+end
+
+function perm.isUsrDir(path)
+  if perm.getPerm(perm.getVar("user")) == 1 then return true end
+  if perm.getPerm(perm.getVar("user")) ~= 1 then
+    for i = 1, #sys do
+      if p.info().command == sys[i] then return true end
+	  end
+    local d = {}
+    d = perm.getUser(perm.getVar("user"))
+    path = require("shell").resolve(path)
+    for i in io.lines("/etc/sys/passwd") do
+      local sp = adv.split(i, ":")
+      if sp[1] ~= d[1] and string.find(path, sp[4]) then return false end
+    end
+  end
+  return true
+end
+
+function perm.setVar(varname, value)
+  if _G.runlevel ~= "S" then
+	  for i = 1, #sys do
+      if p.info().command == sys[i] then goto ok end
+	  end
+	  perm.error(p.info().command,"set var")
+  end
+  ::ok::
+  if system[varname] ~= nil then system[varname] = value if varname == "user" then os.setenv("USER", value) elseif varname == "home" then os.setenv("HOME", value) end end
+end
+function perm.getVar(varname)
+	if system[varname] ~= nil then return system[varname] end
+end
+
+function perm.isSys(prog)
+	for i = 1, #sys do
+	  if prog == sys[i] then return true end
+	end
+	return false
 end
 
 return perm

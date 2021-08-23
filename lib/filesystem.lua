@@ -1,5 +1,6 @@
 local component = require("component")
 local unicode = require("unicode")
+--local perm = require("perm")
 
 local filesystem = {}
 local mtab = {name="", children={}, links={}}
@@ -19,30 +20,7 @@ local function segments(path)
   end
   return parts
 end
-local function isBan(path)
-  if os.getenv("USER") == "root" then return false end
-  for t in io.lines("/etc/banpath") do
-    if string.find(path, t) then
-      if os.getenv("USER") ~= "root" then
-        return true
-      end
-    end
-  end
-  return false
-end
-local function isUsrDir(path)
-  if os.getenv("USER") == "root" then return true end
-  if os.getenv("USER") ~= "root" then
-    local d = {}
-    if os.getenv("USER") == "guest" then
-      d = {"guest", "guest", nil, "/"}
-    else
-      d = require("perm").getUser(os.getenv("USER"))
-    end
-    path = require("shell").resolve(path)
-  end
-  return true
-end
+
 local function findNode(path, create, resolve_links)
   checkArg(1, path, "string")
   local visited = {}
@@ -260,8 +238,7 @@ function filesystem.isDirectory(path)
 end
 
 function filesystem.list(path)
-  if not isBan(path) and isUsrDir(path) then
-    local node, rest, vnode, vrest = findNode(path, false, true)
+  local node, rest, vnode, vrest = findNode(path, false, true)
     local result = {}
     if node then
       result = node.fs and node.fs.list(rest or "") or {}
@@ -280,21 +257,19 @@ function filesystem.list(path)
     end
     local set = {}
     for _,name in ipairs(result) do
+	  if _G.runlevel ~= "S" then
+	    if require("perm").isBan(require("shell").resolve(path)) or not require("perm").isUsrDir(require("shell").resolve(path)) then
+		  goto skip
+		end
+	  end
       set[filesystem.canonical(name)] = name
+	  ::skip::
     end
     return function()
       local key, value = next(set)
       set[key or false] = nil
       return value
     end
-  else
-    set = {"Block"} 
-    return function()
-      local key, value = next(set)
-      set[key or false] = nil
-      return value
-    end, "Block"
-  end
 end
 
 function filesystem.open(path, mode)

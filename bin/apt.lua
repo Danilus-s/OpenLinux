@@ -2,7 +2,7 @@ local it = require("internet")
 local sh = require("shell")
 local fs = require("filesystem")
 local term = require("term")
-local perm = require("perm")
+local adv = require("adv")
 
 if not fs.exists("/etc/apt") and not fs.isDirectory("/etc/apt") then fs.makeDirectory("/etc/apt") end
 
@@ -19,7 +19,7 @@ if #args < 1 then
 end
 local function install(fi, gt, y)
     for i = 1, #fi do
-        local data = perm.split(fi[i], ":")
+        local data = adv.split(fi[i], ":")
         data[2] = require("text").trim(data[2])
         data[3] = require("text").trim(data[3])
         local url = "https://raw.githubusercontent.com/" .. data[3]
@@ -60,7 +60,7 @@ local function install(fi, gt, y)
             local t = f:read()
             if t ~= nil then
                 inst[#inst + 1] = t
-                if perm.split(t, ":")[1] == gt[1] then goto skip; break end
+                if adv.split(t, ":")[1] == gt[1] then goto skip; break end
             else
                 break
             end
@@ -75,7 +75,7 @@ end
 
 if args[1] == "update" then
     local url = "https://raw.githubusercontent.com/Danilus-s/OC-APT/master/APTlist"
-    local f, reason = io.open("/etc/apt/update", "w")
+    local f, reason = io.open("/etc/apt/sources.list", "w")
     if not f then
         io.stderr:write("Failed opening file for writing: " .. reason)
         return
@@ -94,20 +94,20 @@ if args[1] == "update" then
         f:close()
     end
 elseif args[1] == "list" then
-    for l in io.lines("/etc/apt/update") do
-        print(perm.split(l, ":")[1])
+    for l in io.lines("/etc/apt/sources.list") do
+        print(adv.split(l, ":")[1])
     end
 elseif args[1] == "search" and args[2] ~= nil then
-    for l in io.lines("/etc/apt/update") do
-        if string.find(string.lower(perm.split(l, ":")[1]), string.lower(args[2])) then
-            print(perm.split(l, ":")[1])
+    for l in io.lines("/etc/apt/sources.list") do
+        if string.find(string.lower(adv.split(l, ":")[1]), string.lower(args[2])) then
+            print(adv.split(l, ":")[1])
         end
     end
 elseif args[1] == "install" and args[2] ~= nil then
     local get
-    for l in io.lines("/etc/apt/update") do
-        if string.lower(perm.split(l, ":")[1]) == string.lower(args[2]) then
-            get = perm.split(l, ":")
+    for l in io.lines("/etc/apt/sources.list") do
+        if string.lower(adv.split(l, ":")[1]) == string.lower(args[2]) then
+            get = adv.split(l, ":")
             break
         end
     end
@@ -127,8 +127,8 @@ elseif args[1] == "upgrade" then
     if #args == 2 then
         local get
         for l in io.lines("/etc/apt/installed") do
-            if string.lower(perm.split(l, ":")[1]) == string.lower(args[2]) then
-                get = perm.split(l, ":")
+            if string.lower(adv.split(l, ":")[1]) == string.lower(args[2]) then
+                get = adv.split(l, ":")
                 break
             end
         end
@@ -140,14 +140,14 @@ elseif args[1] == "upgrade" then
         local result, response = pcall(it.request, url)
         if result then
             for chunk in response do
-                files = perm.split(chunk, "\n")
+                files = adv.split(chunk, "\n")
             end
         end
         install(files, get, true)
     elseif #args == 1 then
         local get
         for l in io.lines("/etc/apt/installed") do
-            get = perm.split(l, ":")
+            get = adv.split(l, ":")
             local url = "https://raw.githubusercontent.com/" .. get[2]
             local files = {}
             io.write("Get information from: " .. url .. "\n")
@@ -155,7 +155,7 @@ elseif args[1] == "upgrade" then
             local result, response = pcall(it.request, url)
             if result then
                 for chunk in response do
-                    files = perm.split(chunk, "\n")
+                    files = adv.split(chunk, "\n")
                 end
             end
             install(files, get, true)
@@ -164,8 +164,8 @@ elseif args[1] == "upgrade" then
 elseif args[1] == "remove" and args[2] ~= nil then
     local get
     for l in io.lines("/etc/apt/installed") do
-        if string.lower(perm.split(l, ":")[1]) == string.lower(args[2]) then
-            get = perm.split(l, ":")
+        if string.lower(adv.split(l, ":")[1]) == string.lower(args[2]) then
+            get = adv.split(l, ":")
             break
         end
     end
@@ -177,13 +177,13 @@ elseif args[1] == "remove" and args[2] ~= nil then
     local result, response = pcall(it.request, url)
     if result then
         for chunk in response do
-            files = perm.split(chunk, "\n")
+            files = adv.split(chunk, "\n")
         end
     end
     for i = 1, #files do
-        if fs.exists(perm.split(files[i], ":")[3]) and not fs.isDirectory(perm.split(files[i], ":")[3]) and perm.split(files[i], ":")[1] == "file" then
-            fs.remove(perm.split(files[i], ":")[3])
-            print(perm.split(files[i], ":")[3])
+        if fs.exists(adv.split(files[i], ":")[3]) and not fs.isDirectory(perm.split(files[i], ":")[3]) and perm.split(files[i], ":")[1] == "file" then
+            fs.remove(adv.split(files[i], ":")[3])
+            print(adv.split(files[i], ":")[3])
         end
     end
     local inst = {}

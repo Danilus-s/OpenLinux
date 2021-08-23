@@ -3,42 +3,40 @@ local perm = require("perm")
 local term = require("term")
 local sha = require("sha2")
 local text = require("text")
+local adv = require("adv")
 
 local args,opts = shell.parse(...)
 local needUsr
 local needL
 
-if os.getenv("USER") == "user" then
-    needUsr = os.getenv("USER")
-elseif os.getenv("USER") == "root" then
+if perm.getPerm(perm.getVar("user")) ~= 1 then
+    needUsr = perm.getVar("user")
+elseif perm.getPerm(perm.getVar("user")) == 1 then
     if opts.u then
         needUsr = args[1]
     else
-        needUsr = os.getenv("USER")
+        needUsr = perm.getVar("user")
     end
 end
 
 local psw = {}
 for l in io.lines("/etc/sys/passwd") do
     psw[#psw + 1] = l
-    if perm.split(l, ":")[1] == needUsr then
+    if adv.split(l, ":")[1] == needUsr then
         needL = #psw
     end
 end
 if needL == nil then
-    print("User not found")
+    print("passwd: User not found.")
     return
 end
-local curData = perm.split(psw[needL], ":")
+local curData = adv.split(psw[needL], ":")
 
-if os.getenv("USER") == "user" then
+if perm.getPerm(perm.getVar("user")) ~= 1 then
     io.write("Current password: ")
-    term.setCursorBlink(false)
-    local curPass = text.trim(term.read(nil,nil,nil," "))
-    term.setCursorBlink(true)
+    local curPass = perm.read()
     io.write("\n")
-
-    if curData[2] ~= sha.sha3_256(curPass) then print("Current password mismatch");return end
+    if curData[3] ~= sha.sha3_256(curPass) then print("passwd: Current password mismatch.");return end
 end
 io.write("New password: ")
 local newPass = perm.read()
@@ -48,17 +46,16 @@ local agaPass = perm.read()
 io.write("\n")
 
 if agaPass ~= newPass then
-    print("Password mismatch")
+    print("passwd: Password mismatch")
     return
 end
-psw[needL] = curData[1] .. ":" .. sha.sha3_256(newPass)
+psw[needL] = curData[1] .. ":" .. curData[2] .. ":" .. sha.sha3_256(newPass) .. ":" .. curData[4]
 
-local textToWrite = ""
+
+local file, re = io.open("/etc/sys/passwd", "w")
+if not file then print("passwd: " .. re) return end
 for i = 1, #psw-1 do
-    textToWrite = textToWrite .. psw[i] .. "\n"
+  file:write(psw[i] .. "\n")
 end
-textToWrite = textToWrite .. psw[#psw]
-
-local file = io.open("/etc/sys/passwd", "w")
-file:write(textToWrite)
+file:write(psw[#psw])
 file:close()

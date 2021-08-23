@@ -2,6 +2,7 @@ local shell = require("shell")
 local tty = require("tty")
 local fs = require("filesystem")
 local perm = require("perm")
+local uni = require("unicode")
 
 if tty.isAvailable() then
   if io.stdout.tty then
@@ -12,7 +13,7 @@ end
 
 
 
-os.setenv("USER", "root")
+--os.setenv("USER", "root")
 
 shell.setAlias("dir", "ls")
 shell.setAlias("move", "mv")
@@ -37,26 +38,16 @@ os.setenv("HISTSIZE", "10")
 os.setenv("IFS", " ")
 os.setenv("MANPATH", "/usr/man:.")
 os.setenv("PAGER", "less")
-os.setenv("PS1", "\27[40m\27[31m$USER@$PCNAME\27[37m:\27[34m$PWD\27[37m$ \27[37m")
+os.setenv("PS1", "\27[31m" .. uni.char(9484) .. uni.char(9472) .. uni.char(9472) .. "(\27[36;1m$USER\27[40m@$PCNAME\27[31m)" .. uni.char(9472) .. "[\27[35;1m$PWD\27[31m]\n".. uni.char(9492) .. uni.char(9472) .."\27[36;1m$ \27[37m\27[30m\27[m")
 os.setenv("LS_COLORS", "di=0;36:fi=0:ln=0;33:*.lua=0;32")
 --do not delete next line!
 --trigger
-os.setenv("PCNAME", "Danilus")
-os.setenv("HOME", "/home")
-
-if os.getenv("SU") == "true" then os.setenv("USER", "root") else os.setenv("USER", "user") end
-
-::usr::
-if os.getenv("USER") ~= nil then
-  local d = perm.getUser(os.getenv("USER"))
-  os.setenv("HOME", d[3])
-else
-  os.setenv("USER", "user")
-  goto usr
-end
-
-local v = os.getenv("USER")
-os.setenv("USER", "root")
+os.setenv("PCNAME", "user")
+local d = perm.getUser(perm.getVar("defuser"))
+os.setenv("HOME", d[4] or "/")
+--print(d[1], d[4])
+--io.read()
+perm.setVar("user", perm.getVar("defuser"))
 
 shell.setWorkingDirectory(os.getenv("HOME"))
 local home_shrc = shell.resolve(".shrc")
@@ -64,7 +55,6 @@ if fs.exists(home_shrc) then
   loadfile(shell.resolve("source", "lua"))(home_shrc)
 end
 
-os.setenv("USER", v)
-if os.getenv("USER") == "root" then os.setenv("PS1", "\27[42m\27[31m$USER\27[40m@$PCNAME\27[37m:\27[34m$PWD\27[37m$ \27[37m") end
+if perm.getPerm(perm.getVar("user")) == 1 then os.setenv("PS1", "\27[31m" .. uni.char(9484) .. uni.char(9472) .. uni.char(9472) .. "(\27[36;1m$USER\27[40m@$PCNAME\27[31m)" .. uni.char(9472) .. "[\27[35;1m$PWD\27[31m]\n".. uni.char(9492) .. uni.char(9472) .."\27[36;1m# \27[37m\27[30m\27[m") end
 
 dofile("/etc/motd")

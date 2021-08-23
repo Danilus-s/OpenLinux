@@ -38,9 +38,21 @@ gpu.set(w/2-#txt/2,h/2-4, txt)
 gpu.set(w/2-#txt2/2,h/2-6, txt2)
 term.setCursor(w/2-13,h/2-2)
 gpu.setBackground(0x000000)
-rawpass = perm.read()
+rawpass = string.gsub(perm.read(), ":", "")
 if rawpass == "" then goto retrootpass end
 local rootpass = sha.sha3_256(rawpass)
+
+txt = "Enter user name:"
+gpu.setBackground(0x000000)
+tty.clear()
+gpu.setBackground(0x505050)
+gpu.fill(w/2-15,h/2-5,30,3, " ")
+gpu.set(w/2-#txt/2,h/2-4, txt)
+gpu.set(w/2-#txt2/2,h/2-6, txt2)
+term.setCursor(w/2-13,h/2-2)
+gpu.setBackground(0x000000)
+local usrname = string.gsub(io.read(), ":", "")
+
 
 txt = "Enter user password:"
 gpu.setBackground(0x000000)
@@ -51,16 +63,16 @@ gpu.set(w/2-#txt/2,h/2-4, txt)
 gpu.set(w/2-#txt2/2,h/2-6, txt2)
 term.setCursor(w/2-13,h/2-2)
 gpu.setBackground(0x000000)
-rawpass = perm.read()
+rawpass = string.gsub(perm.read(), ":", "")
 local pass = sha.sha3_256(rawpass)
 
 gpu.setBackground(0x000000)
 tty.clear()
 
-data = "root:" .. rootpass .. "\nuser:" .. pass
+data = "root:1:" .. rootpass .. ":/root\n" .. usrname ..":2:" .. pass .. "/home/" .. usrname
 fs.makeDirectory("/root")
 fs.makeDirectory("/var")
-fs.makeDirectory("/home")
+fs.makeDirectory("/home/" .. usrname)
 fs.makeDirectory("/etc/sys")
 local file = io.open("/etc/sys/passwd", "w")
 file:write(data)

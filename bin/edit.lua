@@ -24,7 +24,11 @@ if fs.exists(file_parentpath) and not fs.isDirectory(file_parentpath) then
 end
 
 local readonly = options.r or fs.get(filename) == nil or fs.get(filename).isReadOnly()
-if os.getenv("USER") ~= "root" then readonly = true end
+do
+  local perm = require("perm")
+  if perm.isBan(filename) then readonly = true end
+  if not perm.isUsrDir(filename) then perm.error("edit",filename) end
+end
 
 if fs.isDirectory(filename) then
   io.stderr:write("file is a directory\n")

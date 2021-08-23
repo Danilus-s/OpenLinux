@@ -3,6 +3,7 @@ local computer = require("computer")
 local unicode = require("unicode")
 local tty = require("tty")
 local sh = require("sh")
+local perm = require("perm")
 
 
 local lines = {"\27[33m" .. _OSVERSION .. "\27[m"}

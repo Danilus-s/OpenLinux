@@ -1,71 +1,73 @@
 local term = require("term")
 local text = require("text")
 local shell = require("shell")
-local sh = require("sh")
+local sh = require("shell")
 local perm = require("perm")
 local sha = require("sha2")
+local adv = require("adv")
 
 local args,opts = shell.parse(...)
 local com = ""
 local pass
+local user = "root"
 local try = 1
 
 local stw = 1
 if opts.p then 
-  stw = 2
+  stw = stw + 1
+end
+if opts.u then
+	stw = stw + 1
 end
 for i = stw, #args do
   com = com .. args[i] .. " "
 end
 
 if opts.h or opts.help then
-  print("Usage:`sudo [-p] [<password>] <command>")
+  print("Usage: sudo [-p] [<password>] [-u] [<user>] <command>")
   return
+end
+if opts.u then
+	if opts.p then user = args[2] else user = args[1] end
 end
 if opts.p then
   pass = args[1]
   goto skip
 end
 
-if os.getenv("SUDO") == "true" then
-  if os.time() >= tonumber(os.getenv("SUDOT")) then
-    os.setenv("SUDO", nil)
-    os.setenv("SUDOT", nil)
+if perm.getVar("sudo") and user == "root" then
+  if os.time() >= perm.getVar("sudot") then
+    perm.setVar("sudo", false)
+    perm.setVar("sudot", 0)
   else
-    local env = os.getenv("USER")
-    os.setenv("USER", "root")
-    sh.execute(_ENV, com)
-    os.setenv("USER", env)
+    local env = perm.getVar("user")
+    perm.setVar("user", "root")
+    sh.execute(com)
+    perm.setVar("user", env)
     return
   end
 end
 ::ret::
-io.write("[sudo] password for root: ")
+io.write("[sudo] password for " .. user .. ": ")
 pass = perm.read()
 io.write("\n")
 ::skip::
-local file = io.open("/etc/sys/passwd")
 
 local tmp = {}
 
-local f
-repeat
- f = file:read("*l")
- if f ~= nil then tmp = perm.split(f, ":") else break end
-until tmp[1] == "root"
-file:close()
-if tmp[1] ~= "root" then
-  print("User not found")
+tmp = perm.getUser(user)
+if tmp[1] ~= user then
+  print("sudo: User not found.")
   return
 end
 
-if tostring(tmp[2]) == sha.sha3_256(text.trim(pass)) then
-  os.setenv("SUDO", "true")
-  os.setenv("SUDOT", os.time()+6000)
-  local env = os.getenv("USER")
-  os.setenv("USER", "root")
-  sh.execute(_ENV, com)
-  os.setenv("USER", env)
+if tostring(tmp[3]) == sha.sha3_256(text.trim(pass)) then
+  perm.setVar("sudo", true)
+  perm.setVar("sudot", os.time()+6000)
+  local env = perm.getVar("user")
+  perm.setVar("user", user)
+  sh.execute(com)
+  perm.setVar("user", env)
 else
   if try < 3 and not opts.p then 
     print("Password is wrong, please try again")

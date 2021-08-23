@@ -1,0 +1,7 @@
+local perm = require("perm")
+perm.setVar("logged", false)
+perm.setVar("defuser", "")
+perm.setVar("user", "")
+os.setenv("HOME")
+perm.setVar("sudo", false)
+os.exit()
