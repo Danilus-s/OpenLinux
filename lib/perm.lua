@@ -66,6 +66,7 @@ end
 
 function perm.getPerm(user)
   local file = io.open("/etc/sys/passwd")
+  if not file then return 1 end
   local f
   local tmp = {}
   repeat
