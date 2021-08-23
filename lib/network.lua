@@ -88,6 +88,7 @@ function network.setIP(iface, IP, save)
 end
 
 function network.getSavedIP(addr)
+  if not require("filesystem").exists("/etc/sys/saveip") then adv.makeFile("/etc/sys/saveip") end
   for i in io.lines("/etc/sys/saveip") do
     local a = adv.split(i, ":")
     if a[1] == addr then return a[2] end
