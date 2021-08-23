@@ -183,7 +183,6 @@ file:/bin/sudo.lua:bin/sudo.lua
 file:/bin/sh.lua:bin/sh.lua
 file:/bin/wget.lua:bin/wget.lua
 file:/bin/sleep.lua:bin/sleep.lua
-file:/bin/cfgemu.lua:bin/cfgemu.lua
 file:/bin/mount.lua:bin/mount.lua
 file:/bin/address.lua:bin/address.lua
 file:/bin/dmesg.lua:bin/dmesg.lua
