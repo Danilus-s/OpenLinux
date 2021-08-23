@@ -16,7 +16,7 @@ for i in pairs(com.list("modem")) do
   local ip = network.getSavedIP(i)
   if com.invoke(i, "isWireless") then
       f:write("wlan" .. wlanC .. ":" .. i .. ":" .. ip .."\n")
-      wethC = wethC + 1
+      wlanC = wlanC + 1
     else
       f:write("eth" .. ethC .. ":" .. i .. ":" .. ip .."\n")
       ethC = ethC + 1
