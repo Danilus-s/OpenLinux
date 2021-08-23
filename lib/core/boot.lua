@@ -10,6 +10,7 @@ local unicode = unicode
 
 -- Runlevel information.
 _G.runlevel = "S"
+_G.ready = false
 local shutdown = computer.shutdown
 computer.runlevel = function() return _G.runlevel end
 computer.shutdown = function(reboot)
@@ -142,7 +143,6 @@ for c, t in component.list() do
 end
 
 status("Initializing system...")
-
 computer.pushSignal("init") -- so libs know components are initialized.
 require("event").pull(1, "init") -- Allow init processing.
 _G.runlevel = 1
@@ -158,18 +158,21 @@ _G.runlevel = 1
   return t
 end]]
 
-local w,h = require("component").gpu.getResolution()
-if w == 160 then require("component").gpu.setResolution(150, 50) end
+local adv = require("adv")
+
+local cfg = adv.readCfg("/etc/system.cfg")
+local cur = {require("component").gpu.getResolution()}
+if cfg.resolution ~= nil then local d = adv.split(cfg.resolution, "x") if #d == 2 then if tonumber(d[1]) < cur[1] and tonumber(d[2]) < cur[2] then require("component").gpu.setResolution(tonumber(d[1]), tonumber(d[2])) end end end
 if require("filesystem").exists("/etc/sys/passwd") then
   local ok = false
   for i in io.lines("/etc/sys/passwd") do
-    if require("perm").split(i, ":")[1] == "root" then ok = true;break end
+    if adv.split(i, ":")[1] == "root" then ok = true;break end
   end
   if not ok then
     os.remove("/etc/sys/passwd")
   end
 end
-if not require("filesystem").exists("/etc/sys/network.cfg") then
+--[[if not require("filesystem").exists("/etc/sys/network.cfg") then
   local f = io.open("/etc/sys/network.cfg", "w")
   local ifaces = {}
   local txt = ""
@@ -189,9 +192,7 @@ if not require("filesystem").exists("/etc/sys/network.cfg") then
   end
   f:write(txt)
   f:close()
-end
-os.setenv("SU", "false")
+end]]
 dofile("/sbin/reg.lua")
 dofile("/sbin/login.lua")
 require("perm").check()
---os.setenv("USER", "user")

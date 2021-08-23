@@ -132,6 +132,14 @@ function filesystem.isLink(path)
 end
 
 function filesystem.copy(fromPath, toPath)
+  if _G.runlevel ~= "S" then
+	  if require("perm").isBan(fromPath) or not require("perm").isUsrDir(fromPath) then
+			require("perm").error("copy", fromPath)
+	  end
+	  if require("perm").isBan(toPath) or not require("perm").isUsrDir(toPath) then
+			require("perm").error("copy", fromPath)
+	  end
+  end
   local data = false
   local input, reason = filesystem.open(fromPath, "rb")
   if input then
@@ -251,6 +259,11 @@ function filesystem.internal.proxy(filter, options)
 end
 
 function filesystem.remove(path)
+  if _G.runlevel ~= "S" then
+	  if require("perm").isBan(path) or not require("perm").isUsrDir(path) then
+			require("perm").error("remove", require("shell").resolve(path))
+	  end
+  end
   local function removeVirtual()
     local _, _, vnode, vrest = filesystem.findNode(filesystem.path(path), false, true)
     -- vrest represents the remaining path beyond vnode
