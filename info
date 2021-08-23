@@ -80,7 +80,6 @@ file:/lib/core/full_filesystem.lua:lib/core/full_filesystem.lua
 file:/lib/core/full_buffer.lua:lib/core/full_buffer.lua
 file:/lib/buffer.lua:lib/buffer.lua
 file:/lib/network.lua:lib/network.lua
-dir:/mnt
 dir:/var
 dir:/usr
 dir:/usr/bin
